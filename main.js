@@ -1,24 +1,26 @@
 const {app, BrowserWindow} = require('electron')
-
+const server = require('./app');
 let mainWindow
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 800,
     webPreferences: {
       nodeIntegration: true
     }
   })
 
-  mainWindow.loadFile('index.html')
-
+  mainWindow.loadURL('http://localhost:3000')  //ADD THIS
   mainWindow.on('closed', function () {
     mainWindow = null
   })
+  mainWindow.webContents.openDevTools()
+
 }
 
 app.on('ready', createWindow)
+
 
 app.on('resize', function(e,x,y){
   mainWindow.setSize(x, y);
