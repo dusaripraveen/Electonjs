@@ -1,0 +1,315 @@
+<html>
+<head>
+  <title>Node.js Desktop Application using Electron, Bootstrap and Express.js</title>
+  <link href="./vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./css/styles.css" rel="stylesheet">
+
+</head>
+<body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
+        <ul class="navbar-nav px-3">
+          <li class="nav-item text-nowrap">
+            <a class="nav-link" href="#">Sign out</a>
+          </li>
+        </ul>
+      </nav>
+  
+      <div class="container-fluid">
+        <div class="row">
+          <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link active" href="#">
+                    <span data-feather="home"></span>
+                    Dashboard <span class="sr-only">(current)</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="bar-chart-2"></span>
+                    Reports
+                  </a>
+                </li>
+
+              </ul>
+  
+              <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>Saved reports</span>
+                <a class="d-flex align-items-center text-muted" href="#">
+                  <span data-feather="plus-circle"></span>
+                </a>
+              </h6>
+              <ul class="nav flex-column mb-2">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file-text"></span>
+                    Current month
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file-text"></span>
+                    Last quarter
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file-text"></span>
+                    Year-end sale
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+  
+          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div id="formauploaddivs">
+              <div class="mb-3">
+                <label for="formFile" class="form-label">CSV for Acom</label>
+                <input class="form-control form-control-sm" id="fileUpload" type="file">
+                
+              </div>
+              <div class="mb-3">
+                <label for="formFile" class="form-label">CSV for Aem</label>
+                <input class="form-control form-control-sm" id="fileUploadAem" type="file">
+                
+              </div>
+              <div class="mb-3">
+                <label for="formFile" class="form-label">CSV for country</label>
+                <input class="form-control form-control-sm" id="fileUploadcountry" type="file">
+                
+              </div>
+              <div class="mb-3">
+                <label for="formFile" class="form-label">CSV for Acom responce</label>
+                <input class="form-control form-control-sm" id="fileUploadAemresponce" type="file">
+                
+              </div>
+              <div class="mb-3">
+                <button type="button" id="upload" class="btn btn-primary">Upload</button>
+                <div id="dvCSV">
+                </div>
+              </div>
+            </div>
+              <div id="container" style="height: 300px"></div>
+          </main>
+        </div>
+      </div>
+  
+  <script src="./vendor/jquery/jquery.min.js"></script>
+  <script src="./vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/series-label.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+   <script type="text/javascript">
+    $(function () {
+        localStorage.clear();
+        $("#upload").bind("click", function () {
+            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+            if (regex.test($("#fileUpload").val().toLowerCase())) {
+                if (typeof (FileReader) != "undefined") {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var rows = e.target.result.split("\r\n");
+                        var lines=e.target.result.split('\r');
+                        var result = [];
+                        var headers=lines[0].split(",");
+                        for(var i=1;i<rows.length;i++){
+                            var obj = {};
+                            var currentline=rows[i].split(",");
+                            for(var j=0;j<headers.length;j++){
+                                obj[headers[j]] = currentline[j];
+                            }
+                            result.push(obj);
+                        }
+                        $("#dvCSV").html('');
+                        localStorage.setItem('Acom', JSON.stringify(result));
+                        $("#dvCSV").append(JSON.stringify(result));
+                    }
+                    reader.readAsText($("#fileUpload")[0].files[0]);
+                } else {
+                    alert("This browser does not support HTML5.");
+                }
+            } else {
+                alert("Please upload a valid CSV file.");
+            }
+
+            if (regex.test($("#fileUploadAem").val().toLowerCase())) {
+                if (typeof (FileReader) != "undefined") {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var rows = e.target.result.split("\r\n");
+                        var lines=e.target.result.split('\r');
+                        var result = [];
+                        var headers=lines[0].split(",");
+                        for(var i=1;i<rows.length;i++){
+                            var obj = {};
+                            var currentline=rows[i].split(",");
+                            for(var j=0;j<headers.length;j++){
+                                obj[headers[j]] = currentline[j];
+                            }
+                            result.push(obj);
+                        }
+                        $("#dvCSV").html('');
+                        localStorage.setItem('AEM', JSON.stringify(result));
+                        $("#dvCSV").append(JSON.stringify(result));
+                    }
+                    reader.readAsText($("#fileUploadAem")[0].files[0]);
+                } else {
+                    alert("This browser does not support HTML5.");
+                }
+            } else {
+                alert("Please upload a valid CSV file.");
+            }
+
+
+
+            if (regex.test($("#fileUploadcountry").val().toLowerCase())) {
+                if (typeof (FileReader) != "undefined") {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var rows = e.target.result.split("\r\n");
+                        var lines=e.target.result.split('\r');
+                        var result = [];
+                        var headers=lines[0].split(",");
+                        for(var i=1;i<rows.length;i++){
+                            var obj = {};
+                            var currentline=rows[i].split(",");
+                            for(var j=0;j<headers.length;j++){
+                                obj[headers[j]] = currentline[j];
+                            }
+                            result.push(obj);
+                        }
+                        $("#dvCSV").html('');
+                        localStorage.setItem('Country', JSON.stringify(result));
+                        $("#dvCSV").append(JSON.stringify(result));
+                    }
+                    reader.readAsText($("#fileUploadcountry")[0].files[0]);
+                } else {
+                    alert("This browser does not support HTML5.");
+                }
+            } else {
+                alert("Please upload a valid CSV file.");
+            }
+
+
+            if (regex.test($("#fileUploadAemresponce").val().toLowerCase())) {
+                if (typeof (FileReader) != "undefined") {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var rows = e.target.result.split("\r\n");
+                        var lines=e.target.result.split('\r');
+                        var result = [];
+                        var headers=lines[0].split(",");
+                        for(var i=1;i<rows.length;i++){
+                            var obj = {};
+                            var currentline=rows[i].split(",");
+                            for(var j=0;j<headers.length;j++){
+                                obj[headers[j]] = currentline[j];
+                            }
+                            result.push(obj);
+                        }
+                        $("#dvCSV").html('');
+                        localStorage.setItem('Acomresponce', JSON.stringify(result));
+                        $("#dvCSV").append(JSON.stringify(result));
+                    }
+                    reader.readAsText($("#fileUploadAemresponce")[0].files[0]);
+                } else {
+                    alert("This browser does not support HTML5.");
+                }
+            } else {
+                alert("Please upload a valid CSV file.");
+            }
+
+            //load from localstorage and display chart
+                $('#formauploaddivs').hide();
+                Highcharts.chart('container', {
+
+                    title: {
+                        text: 'U.S Solar Employment Growth',
+                        align: 'left'
+                    },
+
+                    subtitle: {
+                        text: 'By Job Category. Source: <a href="https://irecusa.org/programs/solar-jobs-census/" target="_blank">IREC</a>.',
+                        align: 'left'
+                    },
+
+                    yAxis: {
+                        title: {
+                            text: 'Number of Employees'
+                        }
+                    },
+
+                    xAxis: {
+                        accessibility: {
+                            rangeDescription: 'Range: 2010 to 2020'
+                        }
+                    },
+
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle'
+                    },
+
+                    plotOptions: {
+                        series: {
+                            label: {
+                                connectorAllowed: false
+                            },
+                            pointStart: 2010
+                        }
+                    },
+
+                    series: [{
+                        name: 'Installation & Developers',
+                        data: [43934, 48656, 65165, 81827, 112143, 142383,
+                            171533, 165174, 155157, 161454, 154610]
+                    }, {
+                        name: 'Manufacturing',
+                        data: [24916, 37941, 29742, 29851, 32490, 30282,
+                            38121, 36885, 33726, 34243, 31050]
+                    }, {
+                        name: 'Sales & Distribution',
+                        data: [11744, 30000, 16005, 19771, 20185, 24377,
+                            32147, 30912, 29243, 29213, 25663]
+                    }, {
+                        name: 'Operations & Maintenance',
+                        data: [null, null, null, null, null, null, null,
+                            null, 11164, 11218, 10077]
+                    }, {
+                        name: 'Other',
+                        data: [21908, 5548, 8105, 11248, 8989, 11816, 18274,
+                            17300, 13053, 11906, 10073]
+                    }],
+
+                    responsive: {
+                        rules: [{
+                            condition: {
+                                maxWidth: 500
+                            },
+                            chartOptions: {
+                                legend: {
+                                    layout: 'horizontal',
+                                    align: 'center',
+                                    verticalAlign: 'bottom'
+                                }
+                            }
+                        }]
+                    }
+
+                });
+
+
+        });
+    });
+
+
+</script>
+</body>
+</html>
