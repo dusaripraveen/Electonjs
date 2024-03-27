@@ -32,7 +32,7 @@ app.post('/form-submit', function(req, res, next) {
   email = req.body.typeEmailX;
   password = req.body.typePasswordX;
   Token = req.body.authToken;
-  res.render('welcome', { title: 'Welcome' });
+  res.render('dashboard', { title: 'Welcome' });
 });
 
 module.exports = app;
