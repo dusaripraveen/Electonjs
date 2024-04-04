@@ -1,0 +1,17 @@
+[
+    {
+      "name": "Praveen",
+      "email": "pdusari@deloitte.com",
+      "password": "password1"
+    },
+    {
+      "name": "Sandeep",
+      "email": "busandeep@deloitte.com",
+      "password": "password"
+    },
+    {
+        "name": "Test",
+        "email": "test@deloitte.com",
+        "password": "password"
+      }
+]
