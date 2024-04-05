@@ -30,4 +30,10 @@ data_obj = {
         'url': 'https://ofq85486.live.dynatrace.com/ui/data-explorer?dashboardId=2f5608b0-e87e-4b2e-a0f9'
                '-81b93f1f8c87&tileId=8&gtf=previous%204%20weeks&gf=all'
     }
+
+}
+
+user_details = {
+    'email': 'sandeep.burra@non.agilent.com',
+    'password': 'Sandeep@13057'
 }

@@ -38,9 +38,9 @@ def acom_store(data):
 
 
 def online_monthly(data):
-    if 'SanJose' in data:
+    if 'San Jose' in data:
         return 'US-San Jose (SLA - 21 s)'
-    elif 'Frankurt' in data:
+    elif 'Frankfurt' in data:
         return 'Germany- Frankurt (SLA - 23 s)'
     elif 'Beijing' in data:
         return 'China - Beijing (SLA - 3s)'
@@ -70,6 +70,15 @@ def aem_label_format(data):
         return 'Logout'
     else:
         return data
+
+
+def ms_conversion(data):
+    seconds_data = []
+    for item in data:
+        milliseconds = float(item[:-2])
+        seconds = round(milliseconds / 1000, 1)
+        seconds_data.append(seconds)
+    return seconds_data
 
 
 def acom_store_sla(sla, data, value, length):

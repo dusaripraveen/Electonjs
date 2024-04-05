@@ -20,6 +20,7 @@ def generate_excel_and_chart(data_list, excel_filename):
 
     # Loop through each dataset
     for idx, data in enumerate(data_list):
+        print(f"data --> {data}")
         # covert json into dataframe
         df = pd.DataFrame(data['data'])
 
@@ -56,7 +57,7 @@ def generate_excel_and_chart(data_list, excel_filename):
 
         # legend properties
         chart.set_legend({'position': 'bottom'})
-        chart.set_title({'name': data.name})
+        chart.set_title({'name': data['name']})
 
         # insert chart into Excel
         worksheet.insert_chart(row_num + df.shape[0] + 5, start_col, chart)
@@ -64,3 +65,7 @@ def generate_excel_and_chart(data_list, excel_filename):
         start_col += df.shape[1] + 7
 
     writer._save()
+    return {
+        'status': True,
+        'message': "File downloaded"
+    }
