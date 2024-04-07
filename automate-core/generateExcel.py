@@ -35,15 +35,17 @@ def generate_excel_and_chart(data_list, excel_filename):
 
         # create line chart
         chart = workbook.add_chart({'type': 'line'})
-
+        # colors = ['#FFA500', '#ADD8E6', '#008000', '#000080']
         # configure the series
         for col in range(1, len(df.columns)):
             chart.add_series({
                 'name': f'=Data!${chr(ord("A") + start_col + col)}$1',
                 'categories': ['Data', row_num + 1, start_col, row_num + len(df), start_col],
-                'values': ['Data', row_num + 1, start_col + col, row_num + len(df), start_col + col]
+                'values': ['Data', row_num + 1, start_col + col, row_num + len(df), start_col + col],
+                'marker': {'type': 'circle', 'size': 5},
+                'data_labels': {'value': True},
+                # 'line': {'color': colors[col-1]}
             })
-
         # y-axis properties
         chart.set_y_axis({'visible': True,
                           'line': {'none': True},
