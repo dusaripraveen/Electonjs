@@ -68,8 +68,23 @@
                         for(var i=1;i<rows.length;i++){
                             var obj = {};
                             var currentline=rows[i].split(",");
+                            var series=[];
                             for(var j=0;j<headers.length;j++){
-                                obj[headers[j]] = currentline[j];
+                                var prop={}
+                                if(j==0){
+                                    console.log("x-axis",currentline[j]);
+                                }else{
+                                    obj[headers[j]] = currentline[j];
+                                    prop.name=headers[j];
+                                    prop.data=[]
+                                    if(Object.hasOwn(series,headers[j])){
+                                        prop.data.push(currentline[j]);
+                                    }else{
+                                        prop.data.push(currentline[j]);
+                                    }
+                                    console.log("y-axis",headers[j],currentline[j]);
+                                }
+                               
                             }
                             result.push(obj);
                         }
