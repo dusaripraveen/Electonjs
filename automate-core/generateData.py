@@ -1,11 +1,12 @@
 import os
-import constants
+from constants import acom_online,aem_monthly
 import pandas as pd
 import json
 from formatcsv import acom_store, acom_store_sla, format_date, online_monthly, acom_monthly, format_month, \
     aem_label_format, ms_conversion
 
 from generateExcel import generate_excel_and_chart
+from datetime import datetime
 
 
 def generate_data(file_path, report_type):
@@ -31,7 +32,7 @@ def acom_online_generate(data, json_data, report_type):
     for key in list(json_data.keys()):
         core_data[acom_store(key)] = list(json_data[key].values())
     core_data['Date'] = format_date(core_data['Date'])
-    data['name'] = constants.data_obj[report_type]['name']
+    data['name'] = acom_online[report_type]['name']
     data['data'] = core_data
     return data
 
@@ -44,7 +45,7 @@ def online_monthly_generate(data, json_data, report_type):
         else:
             core_data[online_monthly(key)] = list(json_data[key].values())
     core_data['Date'] = format_month(core_data['Date'])
-    data['name'] = constants.data_obj[report_type]['name']
+    data['name'] = acom_online[report_type]['name']
     data['data'] = core_data
     return data
 
@@ -57,7 +58,7 @@ def acom_online_monthly_generate(data, json_data, report_type):
         elif report_type == 'online_store_monthly':
             core_data[online_monthly(key)] = list(json_data[key].values())
     core_data['Date'] = format_month(core_data['Date'])
-    data['name'] = constants.data_obj[report_type]['name']
+    data['name'] = acom_online[report_type]['name']
     data['data'] = core_data
     return data
 
@@ -67,14 +68,28 @@ def aem_monthly_generate(data, json_data, report_type):
     for key in list(json_data.keys()):
         core_data[aem_label_format(key)] = list(json_data[key].values())
     core_data['Date'] = format_date(core_data['Date'])
-    data['name'] = constants.data_obj[report_type]['name']
+    data['name'] = aem_monthly[report_type]['name']
     data['data'] = core_data
     return data
 
 
-def get_excel():
-    dir_path = "./input/csv_inputs/"
-    excel_name = './output/sample1.xlsx'
+def generate_filename(report):
+    today = datetime.today()
+    if report == 'monthly':
+        file_name = 'aem_monthly'
+        formatted_date = today.strftime("%b")
+    else:
+        file_name = 'opsDashboad'
+        formatted_date = today.strftime("%b%d")
+
+    file_name = file_name + str(formatted_date) + '.xlsx'
+    print(file_name)
+    return file_name
+
+
+def get_excel(report):
+    dir_path = "./input/csv_inputs/"+report+'/'
+    excel_name = './output/'+generate_filename(report)
     dir_list = os.listdir(dir_path)
     print(f'list of files -->  {dir_list}')
     reports_arr = []
@@ -92,9 +107,11 @@ def get_excel():
         return result
     return {
         'status': False,
-        'message' : 'error'
+        'message': 'error'
     }
 
+
+# get_excel()
 
 # path = "./input/aem.csv"
 # generate_data(path, 'aem_us')
