@@ -13,6 +13,9 @@
           <%- include('partials/sidebar.ejs') %>
           <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div id="formauploaddivs">
+                <div class="mb-3">
+                    <button type="button" class="btn btn-primary" onclick="javascript:exportex()">Export</button>
+                  </div>  
               <div class="mb-3">
                 <label for="formFile" class="form-label">CSV for Acom</label>
                 <input class="form-control form-control-sm" id="fileUpload" type="file">
@@ -53,6 +56,9 @@
   <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
    <script type="text/javascript">
+    function exportex(){
+        window.location.href="./getexport";
+    }
     $(function () {
         localStorage.clear();
         $("#upload").bind("click", function () {

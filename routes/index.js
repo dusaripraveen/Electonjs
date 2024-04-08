@@ -46,4 +46,22 @@ app.post('/form-submit', function(req, res, next) {
  
 });
 
+app.get('/getexport', function(req, res, next) {
+  console.log("export function");
+  // collect data from script
+  PythonShell.run('./automate-core/main.py',  function  (err, results)  {
+      if  (err)  throw err;
+      console.log('hello.py finished.');
+      console.log('results', results);
+     });
+  
+});
+
+app.get('/reports', function(req, res, next) {
+
+  
+  
+});
+
+
 module.exports = app;
