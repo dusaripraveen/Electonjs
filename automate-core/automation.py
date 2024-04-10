@@ -6,18 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 
-user_details = {
-    'email': 'sandeep.burra@non.agilent.com',
-    'password': 'Sandeep@13057'
-}
-
-
-def automate_chrome(website, email, password):
-    report = website['report_name']
-    url = website['data']['url']
-    driver = webdriver.Chrome()
-    driver.get(url)
-
+def login_to_dynatrace(driver, email, password):
     # login
     login = driver.find_element(By.CSS_SELECTOR, "[type='email']")
     login.send_keys(email)
@@ -30,6 +19,23 @@ def automate_chrome(website, email, password):
     password_data.send_keys(password)
     password_data.send_keys(Keys.RETURN)
     time.sleep(2)
+
+
+def automate_chrome(website, driver, email, password):
+    report = website['report_name']
+    url = website['data']['url']
+
+    if website['data']['new_tab']:
+
+        driver.execute_script("window.open('');")
+        driver.switch_to.window(driver.window_handles[-1])
+        driver.get(url)
+    else:
+
+        driver.get(url)
+
+    if not website['data']['new_tab']:
+        login_to_dynatrace(driver, email, password)
 
     try:
         back_to_login = driver.find_element(By.CSS_SELECTOR, "[type='button']")
@@ -76,7 +82,8 @@ def automate_chrome(website, email, password):
         print('Error occurred: ', e)
     finally:
         time.sleep(5)
-        driver.quit()
-
-
-# automate_chrome(url, user_details['email'], user_details['password'])
+        print(f'close activate --> {website['data']['close']}')
+        if website['data']['close']:
+            print('closing !!!!')
+            driver.quit()
+            

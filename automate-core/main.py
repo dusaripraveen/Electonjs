@@ -6,6 +6,7 @@ import shutil
 from constants import acom_online, aem_monthly, user_details
 from generateData import get_excel
 from pathlib import Path
+from selenium import webdriver
 
 
 def get_urls_acom_online():
@@ -28,10 +29,9 @@ def get_urls_aem():
     return arr
 
 
-def start(email, password, dyntrc_data, report):
+def start(email, password, dyntrc_data, report, driver):
     for dy_data in dyntrc_data:
-        print(dy_data)
-        automate_chrome(dy_data, email, password)
+        automate_chrome(dy_data, driver, email, password)
         get_csv(dy_data['report_name'], report)
     print('initiating excel generation')
     result = get_excel(report)
@@ -43,18 +43,19 @@ def start(email, password, dyntrc_data, report):
 
 
 def start_process(email, password, report):
+    driver = webdriver.Chrome()
     if report == 'weekly':
         # weekly data
         dyntrc_data_acom = get_urls_acom_online()
-        start(email, password, dyntrc_data_acom, 'weekly')
+        start(email, password, dyntrc_data_acom, report, driver)
     elif report == 'monthly':
         # weekly data
         dyntrc_data_acom = get_urls_acom_online()
-        start(email, password, dyntrc_data_acom, 'weekly')
+        start(email, password, dyntrc_data_acom, 'weekly', driver)
 
         # monthly data
         dyntrc_data_aem = get_urls_aem()
-        start(email, password, dyntrc_data_aem, 'monthly')
+        start(email, password, dyntrc_data_aem, report, driver)
 
 
 def get_csv(new_name, report):
